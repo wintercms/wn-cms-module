@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Lang;
+use System\Classes\Extensions\WinterExtension;
 use System\Models\Parameter;
 use Winter\Storm\Exception\ApplicationException;
 use Winter\Storm\Exception\SystemException;
@@ -29,7 +30,7 @@ use Winter\Storm\Support\Str;
  * @package winter\wn-cms-module
  * @author Alexey Bobkov, Samuel Georges
  */
-class Theme extends CmsObject
+class Theme extends CmsObject implements WinterExtension
 {
     /**
      * @var string Specifies the theme directory name.

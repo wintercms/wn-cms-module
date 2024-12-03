@@ -1,9 +1,13 @@
-<?php namespace Cms\Classes;
+<?php
 
-use File;
-use ApplicationException;
+namespace Cms\Classes;
+
+use Winter\Storm\Support\Facades\File;
+use System\Classes\Extensions\WinterExtension;
+use Winter\Storm\Exception\ApplicationException;
+use System\Classes\Extensions\ExtensionManager;
 use System\Models\Parameter;
-use Cms\Classes\Theme as CmsTheme;
+use Cms\Classes\Theme;
 
 /**
  * Theme manager
@@ -11,13 +15,9 @@ use Cms\Classes\Theme as CmsTheme;
  * @package winter\wn-cms-module
  * @author Alexey Bobkov, Samuel Georges
  */
-class ThemeManager
+class ThemeManager implements ExtensionManager
 {
     use \Winter\Storm\Support\Traits\Singleton;
-
-    //
-    // Gateway spawned
-    //
 
     /**
      * Returns a collection of themes installed via the update gateway
@@ -84,23 +84,61 @@ class ThemeManager
         return null;
     }
 
-    //
-    // Management
-    //
+    public function list(): array
+    {
+        // TODO: Implement list() method.
+        return [];
+    }
+
+    public function create(): Theme
+    {
+        // TODO: Implement create() method.
+    }
+
+    public function install(Theme|string $extension): Theme
+    {
+        // TODO: Implement install() method.
+    }
+
+    public function enable(Theme|string $extension): Theme
+    {
+        // TODO: Implement enable() method.
+    }
+
+    public function disable(WinterExtension|string $extension): Theme
+    {
+        // TODO: Implement disable() method.
+    }
+
+    public function update(WinterExtension|string $extension): Theme
+    {
+        // TODO: Implement update() method.
+    }
+
+    public function refresh(WinterExtension|string $extension): Theme
+    {
+        // TODO: Implement refresh() method.
+    }
+
+    public function rollback(WinterExtension|string $extension, string $targetVersion): Theme
+    {
+        // TODO: Implement rollback() method.
+    }
 
     /**
      * Completely delete a theme from the system.
-     * @param string $theme Theme code/namespace
-     * @return void
+     * @param WinterExtension|string $theme Theme code/namespace
+     * @return mixed
+     * @throws ApplicationException
      */
-    public function deleteTheme($theme)
+    public function uninstall(WinterExtension|string $theme): mixed
     {
         if (!$theme) {
             return false;
         }
 
         if (is_string($theme)) {
-            $theme = CmsTheme::load($theme);
+            $theme = Theme::load($theme);
         }
 
         if ($theme->isActiveTheme()) {
@@ -123,5 +161,19 @@ class ThemeManager
         if ($themeCode = $this->findByDirName($theme->getDirName())) {
             $this->setUninstalled($themeCode);
         }
+
+        return true;
+    }
+
+    /**
+     * @deprecated TODO: Remove this
+     *
+     * @param $theme
+     * @return mixed
+     * @throws ApplicationException
+     */
+    public function deleteTheme($theme): mixed
+    {
+        return $this->uninstall($theme);
     }
 }
