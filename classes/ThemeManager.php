@@ -2,12 +2,13 @@
 
 namespace Cms\Classes;
 
-use Winter\Storm\Support\Facades\File;
-use System\Classes\Extensions\WinterExtension;
-use Winter\Storm\Exception\ApplicationException;
-use System\Classes\Extensions\ExtensionManager;
-use System\Models\Parameter;
 use Cms\Classes\Theme;
+use System\Classes\Extensions\ExtensionManager;
+use System\Classes\Extensions\ExtensionSource;
+use System\Classes\Extensions\WinterExtension;
+use System\Models\Parameter;
+use Winter\Storm\Exception\ApplicationException;
+use Winter\Storm\Support\Facades\File;
 
 /**
  * Theme manager
@@ -33,7 +34,7 @@ class ThemeManager implements ExtensionManager
      * @param  string  $name Theme code
      * @return boolean
      */
-    public function isInstalled($name)
+    public function isInstalled($name): bool
     {
         return array_key_exists($name, Parameter::get('system::theme.history', []));
     }
@@ -95,12 +96,17 @@ class ThemeManager implements ExtensionManager
         // TODO: Implement create() method.
     }
 
-    public function install(Theme|string $extension): Theme
+    public function install(ExtensionSource|WinterExtension|string $extension): Theme
     {
         // TODO: Implement install() method.
     }
 
-    public function enable(Theme|string $extension): Theme
+    public function getExtension(WinterExtension|ExtensionSource|string $extension): ?WinterExtension
+    {
+        // TODO: Implement getExtension() method.
+    }
+
+    public function enable(WinterExtension|string $extension): Theme
     {
         // TODO: Implement enable() method.
     }
