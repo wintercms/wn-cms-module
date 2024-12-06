@@ -2,9 +2,8 @@
 
 namespace Cms\Classes;
 
-use Cms\Classes\Theme;
 use System\Classes\Extensions\ExtensionManager;
-use System\Classes\Extensions\ExtensionSource;
+use System\Classes\Extensions\Source\ExtensionSource;
 use System\Classes\Extensions\WinterExtension;
 use System\Models\Parameter;
 use Winter\Storm\Exception\ApplicationException;
