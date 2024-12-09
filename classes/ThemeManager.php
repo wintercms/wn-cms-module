@@ -2,7 +2,7 @@
 
 namespace Cms\Classes;
 
-use System\Classes\Extensions\ExtensionManager;
+use System\Classes\Extensions\ExtensionManagerInterface;
 use System\Classes\Extensions\Source\ExtensionSource;
 use System\Classes\Extensions\WinterExtension;
 use System\Models\Parameter;
@@ -15,7 +15,7 @@ use Winter\Storm\Support\Facades\File;
  * @package winter\wn-cms-module
  * @author Alexey Bobkov, Samuel Georges
  */
-class ThemeManager implements ExtensionManager
+class ThemeManager implements ExtensionManagerInterface
 {
     use \Winter\Storm\Support\Traits\Singleton;
 
@@ -90,7 +90,7 @@ class ThemeManager implements ExtensionManager
         return [];
     }
 
-    public function create(): Theme
+    public function create(string $extension): Theme
     {
         // TODO: Implement create() method.
     }
@@ -100,17 +100,17 @@ class ThemeManager implements ExtensionManager
         // TODO: Implement install() method.
     }
 
-    public function getExtension(WinterExtension|ExtensionSource|string $extension): ?WinterExtension
+    public function get(WinterExtension|ExtensionSource|string $extension): ?WinterExtension
     {
         // TODO: Implement getExtension() method.
     }
 
-    public function enable(WinterExtension|string $extension): Theme
+    public function enable(WinterExtension|string $extension, string|bool $flag = self::DISABLED_BY_USER): Theme
     {
         // TODO: Implement enable() method.
     }
 
-    public function disable(WinterExtension|string $extension): Theme
+    public function disable(WinterExtension|string $extension, string|bool $flag = self::DISABLED_BY_USER): Theme
     {
         // TODO: Implement disable() method.
     }
