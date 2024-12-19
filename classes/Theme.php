@@ -749,4 +749,19 @@ class Theme extends CmsObject implements WinterExtension
     {
         // TODO: Implement extensionUpdate() method.
     }
+
+    public function extensionPath(): string
+    {
+        // TODO: Implement extensionPath() method.
+    }
+
+    public function extensionVersion(): string
+    {
+        // TODO: Implement extensionVersion() method.
+    }
+
+    public function extensionIdentifier(): string
+    {
+        // TODO: Implement extensionIdentifier() method.
+    }
 }
