@@ -181,4 +181,14 @@ class ThemeManager implements ExtensionManagerInterface
     {
         return $this->uninstall($theme);
     }
+
+    public function availableUpdates(WinterExtension|string|null $extension = null): ?array
+    {
+        // TODO: Implement availableUpdates() method.
+    }
+
+    public function tearDown(): static
+    {
+        // TODO: Implement tearDown() method.
+    }
 }
