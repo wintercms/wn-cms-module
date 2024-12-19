@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use System\Classes\CombineAssets;
+use System\Classes\Extensions\WinterExtension;
 use System\Classes\MarkupManager;
 use System\Classes\SettingsManager;
 use Twig\Cache\FilesystemCache as TwigCacheFilesystem;
@@ -28,7 +29,7 @@ use Winter\Storm\Support\Facades\Event;
 use Winter\Storm\Support\Facades\Url;
 use Winter\Storm\Support\ModuleServiceProvider;
 
-class ServiceProvider extends ModuleServiceProvider
+class ServiceProvider extends ModuleServiceProvider implements WinterExtension
 {
     /**
      * Register the service provider.
@@ -476,5 +477,20 @@ class ServiceProvider extends ModuleServiceProvider
                 Classes\Partial::class
             ];
         });
+    }
+
+    public function getPath(): string
+    {
+        return __DIR__;
+    }
+
+    public function getVersion(): string
+    {
+        // TODO: Implement getVersion() method.
+    }
+
+    public function getIdentifier(): string
+    {
+        return 'Cms';
     }
 }

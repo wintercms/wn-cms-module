@@ -715,52 +715,12 @@ class Theme extends CmsObject implements WinterExtension
         return false;
     }
 
-    public function extensionInstall(): static
-    {
-        // TODO: Implement extensionInstall() method.
-    }
-
-    public function extensionUninstall(): static
-    {
-        // TODO: Implement extensionUninstall() method.
-    }
-
-    public function extensionEnable(): static
-    {
-        // TODO: Implement extensionEnable() method.
-    }
-
-    public function extensionDisable(): static
-    {
-        // TODO: Implement extensionDisable() method.
-    }
-
-    public function extensionRollback(): static
-    {
-        // TODO: Implement extensionRollback() method.
-    }
-
-    public function extensionRefresh(): static
-    {
-        // TODO: Implement extensionRefresh() method.
-    }
-
-    public function extensionUpdate(): static
-    {
-        // TODO: Implement extensionUpdate() method.
-    }
-
-    public function extensionPath(): string
-    {
-        // TODO: Implement extensionPath() method.
-    }
-
-    public function extensionVersion(): string
+    public function getVersion(): string
     {
         // TODO: Implement extensionVersion() method.
     }
 
-    public function extensionIdentifier(): string
+    public function getIdentifier(): string
     {
         // TODO: Implement extensionIdentifier() method.
     }

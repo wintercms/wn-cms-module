@@ -115,7 +115,7 @@ class ThemeManager implements ExtensionManagerInterface
         // TODO: Implement disable() method.
     }
 
-    public function update(WinterExtension|string $extension): Theme
+    public function update(WinterExtension|string|null $extension): Theme
     {
         // TODO: Implement update() method.
     }
