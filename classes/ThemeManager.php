@@ -4,7 +4,7 @@ namespace Cms\Classes;
 
 use System\Classes\Extensions\ExtensionManagerInterface;
 use System\Classes\Extensions\Source\ExtensionSource;
-use System\Classes\Extensions\WinterExtension;
+use Winter\Storm\Foundation\Extension\WinterExtension;
 use System\Models\Parameter;
 use Winter\Storm\Exception\ApplicationException;
 use Winter\Storm\Support\Facades\File;
@@ -115,17 +115,17 @@ class ThemeManager implements ExtensionManagerInterface
         // TODO: Implement disable() method.
     }
 
-    public function update(WinterExtension|string|null $extension): Theme
+    public function update(WinterExtension|string|null $extension = null, bool $migrationsOnly = false): Theme
     {
         // TODO: Implement update() method.
     }
 
-    public function refresh(WinterExtension|string $extension): Theme
+    public function refresh(WinterExtension|string|null $extension = null): Theme
     {
         // TODO: Implement refresh() method.
     }
 
-    public function rollback(WinterExtension|string $extension, string $targetVersion): Theme
+    public function rollback(WinterExtension|string|null $extension = null, ?string $targetVersion = null): Theme
     {
         // TODO: Implement rollback() method.
     }
@@ -136,7 +136,7 @@ class ThemeManager implements ExtensionManagerInterface
      * @return mixed
      * @throws ApplicationException
      */
-    public function uninstall(WinterExtension|string $theme): mixed
+    public function uninstall(WinterExtension|string|null $theme = null): mixed
     {
         if (!$theme) {
             return false;
