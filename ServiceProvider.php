@@ -11,6 +11,7 @@ use Cms\Classes\ComponentManager;
 use Cms\Classes\Page as CmsPage;
 use Cms\Classes\Router;
 use Cms\Classes\Theme;
+use Cms\Classes\ThemeManager;
 use Cms\Models\ThemeData;
 use Cms\Models\ThemeLog;
 use Cms\Twig\DebugExtension;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use System\Classes\CombineAssets;
+use Winter\Storm\Console\Command;
 use Winter\Storm\Foundation\Extension\WinterExtension;
 use System\Classes\MarkupManager;
 use System\Classes\SettingsManager;
@@ -58,6 +60,17 @@ class ServiceProvider extends ModuleServiceProvider implements WinterExtension
             $this->registerBackendReportWidgets();
             $this->registerBackendWidgets();
             $this->registerBackendSettings();
+        }
+
+        /*
+         * Console specific
+         */
+        if ($this->app->runningInConsole()) {
+            Command::extend(function (Command $command) {
+                $command->bindEvent('beforeRun', function () use ($command) {
+                    ThemeManager::instance()->setOutput($command->getOutput());
+                });
+            });
         }
     }
 

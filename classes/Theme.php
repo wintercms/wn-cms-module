@@ -722,6 +722,6 @@ class Theme extends CmsObject implements WinterExtension
 
     public function getIdentifier(): string
     {
-        // TODO: Implement extensionIdentifier() method.
+        return $this->getId();
     }
 }

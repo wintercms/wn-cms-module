@@ -2,6 +2,11 @@
 
 namespace Cms\Classes;
 
+use Illuminate\Console\View\Components\Error;
+use Illuminate\Console\View\Components\Info;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Artisan;
+use System\Classes\Extensions\ExtensionManager;
 use System\Classes\Extensions\ExtensionManagerInterface;
 use System\Classes\Extensions\Source\ExtensionSource;
 use Winter\Storm\Foundation\Extension\WinterExtension;
@@ -15,15 +20,13 @@ use Winter\Storm\Support\Facades\File;
  * @package winter\wn-cms-module
  * @author Alexey Bobkov, Samuel Georges
  */
-class ThemeManager implements ExtensionManagerInterface
+class ThemeManager extends ExtensionManager implements ExtensionManagerInterface
 {
-    use \Winter\Storm\Support\Traits\Singleton;
-
     /**
      * Returns a collection of themes installed via the update gateway
      * @return array
      */
-    public function getInstalled()
+    public function getInstalled(): array
     {
         return Parameter::get('system::theme.history', []);
     }
@@ -33,39 +36,10 @@ class ThemeManager implements ExtensionManagerInterface
      * @param  string  $name Theme code
      * @return boolean
      */
-    public function isInstalled($name): bool
+    public function isInstalled(ExtensionSource|WinterExtension|string $name): bool
     {
-        return array_key_exists($name, Parameter::get('system::theme.history', []));
-    }
-
-    /**
-     * Flags a theme as being installed, so it is not downloaded twice.
-     * @param string $code Theme code
-     * @param string|null $dirName
-     */
-    public function setInstalled($code, $dirName = null)
-    {
-        if (!$dirName) {
-            $dirName = strtolower(str_replace('.', '-', $code));
-        }
-
-        $history = Parameter::get('system::theme.history', []);
-        $history[$code] = $dirName;
-        Parameter::set('system::theme.history', $history);
-    }
-
-    /**
-     * Flags a theme as being uninstalled.
-     * @param string $code Theme code
-     */
-    public function setUninstalled($code)
-    {
-        $history = Parameter::get('system::theme.history', []);
-        if (array_key_exists($code, $history)) {
-            unset($history[$code]);
-        }
-
-        Parameter::set('system::theme.history', $history);
+        $code = $this->resolveIdentifier($name);
+        return array_key_exists($code, Parameter::get('system::theme.history', []));
     }
 
     /**
@@ -86,23 +60,60 @@ class ThemeManager implements ExtensionManagerInterface
 
     public function list(): array
     {
-        // TODO: Implement list() method.
-        return [];
+        $themes = Theme::all();
+        return array_combine(
+            array_map(fn ($theme) => $theme->getIdentifier(), $themes),
+            $themes
+        );
     }
 
     public function create(string $extension): Theme
     {
-        // TODO: Implement create() method.
+        $this->renderComponent(Info::class, sprintf('Running command `create:theme %s`.', $extension));
+
+        $result = Artisan::call('create:theme', [
+            'theme' => $extension,
+            '--uninspiring' => true,
+        ], $this->getOutput());
+
+        $this->renderComponent(
+            $result === 0 ? Info::class : Error::class,
+            $result === 0 ? 'Theme created successfully.' : 'Unable to create theme.'
+        );
+
+        // Return an instance of the plugin
+        return $this->get($extension);
     }
 
     public function install(ExtensionSource|WinterExtension|string $extension): Theme
     {
-        // TODO: Implement install() method.
+        $theme = $this->resolve($extension);
+        $code = $theme->getIdentifier();
+
+        $dirName = strtolower(str_replace('.', '-', $code));
+
+        $history = Parameter::get('system::theme.history', []);
+        $history[$code] = $dirName;
+        Parameter::set('system::theme.history', $history);
+
+        return $theme;
     }
 
     public function get(WinterExtension|ExtensionSource|string $extension): ?WinterExtension
     {
-        // TODO: Implement getExtension() method.
+        if ($extension instanceof WinterExtension) {
+            return $extension;
+        }
+
+        if ($extension instanceof ExtensionSource) {
+            $extension = $extension->getCode();
+        }
+
+        if (is_string($extension)) {
+            return Theme::load($extension);
+        }
+
+        return null;
     }
 
     public function enable(WinterExtension|string $extension, string|bool $flag = self::DISABLED_BY_USER): Theme
@@ -164,7 +175,12 @@ class ThemeManager implements ExtensionManagerInterface
          * Set uninstalled
          */
         if ($themeCode = $this->findByDirName($theme->getDirName())) {
-            $this->setUninstalled($themeCode);
+            $history = Parameter::get('system::theme.history', []);
+            if (array_key_exists($themeCode, $history)) {
+                unset($history[$themeCode]);
+            }
+
+            Parameter::set('system::theme.history', $history);
         }
 
         return true;
