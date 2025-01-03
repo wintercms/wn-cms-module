@@ -12,6 +12,7 @@ use System\Classes\Extensions\Source\ExtensionSource;
 use Winter\Storm\Foundation\Extension\WinterExtension;
 use System\Models\Parameter;
 use Winter\Storm\Exception\ApplicationException;
+use Winter\Storm\Packager\Composer;
 use Winter\Storm\Support\Facades\File;
 
 /**
@@ -60,9 +61,8 @@ class ThemeManager extends ExtensionManager implements ExtensionManagerInterface
 
     public function list(): array
     {
-        $themes = Theme::all();
         return array_combine(
-            array_map(fn ($theme) => $theme->getIdentifier(), $themes),
+            array_map(fn ($theme) => $theme->getIdentifier(), $themes = Theme::all()),
             $themes
         );
     }
@@ -148,7 +148,7 @@ class ThemeManager extends ExtensionManager implements ExtensionManagerInterface
      * @return mixed
      * @throws ApplicationException
      */
-    public function uninstall(WinterExtension|string|null $theme = null): mixed
+    public function uninstall(WinterExtension|string|null $theme = null, bool $noRollback = false, bool $preserveFiles = false): mixed
     {
         if (!$theme) {
             return false;
@@ -168,7 +168,7 @@ class ThemeManager extends ExtensionManager implements ExtensionManagerInterface
          * Delete from file system
          */
         $themePath = $theme->getPath();
-        if (File::isDirectory($themePath)) {
+        if (File::isDirectory($themePath) && !$preserveFiles) {
             File::deleteDirectory($themePath);
         }
 
@@ -201,11 +201,36 @@ class ThemeManager extends ExtensionManager implements ExtensionManagerInterface
 
     public function availableUpdates(WinterExtension|string|null $extension = null): ?array
     {
-        // TODO: Implement availableUpdates() method.
+        $toCheck = $extension ? [$this->get($extension)] : $this->list();
+
+        $composerUpdates = Composer::getAvailableUpdates();
+
+        $updates = [];
+        foreach ($toCheck as $theme) {
+            if ($theme->getComposerPackageName()) {
+                if (isset($composerUpdates[$theme->getComposerPackageName()])) {
+                    $updates[$theme->getIdentifier()] = [
+                        'from' => $composerUpdates[$theme->getComposerPackageName()][0],
+                        'to' => $composerUpdates[$theme->getComposerPackageName()][1],
+                    ];
+                }
+                continue;
+            }
+            // @TODO: Add market place support for updates
+        }
+
+        return $updates;
     }
 
+    /**
+     * @throws ApplicationException
+     */
     public function tearDown(): static
     {
-        // TODO: Implement tearDown() method.
+        foreach ($this->list() as $theme) {
+            $this->uninstall($theme);
+        }
+
+        return $this;
     }
 }

@@ -15,12 +15,14 @@ use Winter\Storm\Exception\SystemException;
 use Winter\Storm\Halcyon\Datasource\DatasourceInterface;
 use Winter\Storm\Halcyon\Datasource\DbDatasource;
 use Winter\Storm\Halcyon\Datasource\FileDatasource;
+use Winter\Storm\Packager\Composer;
 use Winter\Storm\Support\Facades\Config;
 use Winter\Storm\Support\Facades\Event;
 use Winter\Storm\Support\Facades\File;
 use Winter\Storm\Support\Facades\Url;
 use Winter\Storm\Support\Facades\Yaml;
 use Winter\Storm\Support\Str;
+use Winter\Storm\Support\Traits\HasComposerPackage;
 
 /**
  * This class represents the CMS theme.
@@ -32,6 +34,8 @@ use Winter\Storm\Support\Str;
  */
 class Theme extends CmsObject implements WinterExtension
 {
+    use HasComposerPackage;
+
     /**
      * @var string Specifies the theme directory name.
      */
@@ -74,9 +78,12 @@ class Theme extends CmsObject implements WinterExtension
         $theme = new static;
         $theme->setDirName($dirName);
         $theme->registerHalcyonDatasource();
+
         if (App::runningInBackend()) {
             $theme->registerBackendLocalization();
         }
+
+        $theme->setComposerPackage(Composer::getPackageInfoByPath($theme->getPath()));
 
         return $theme;
     }
