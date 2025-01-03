@@ -76,10 +76,9 @@ class ThemeManager extends ExtensionManager implements ExtensionManagerInterface
             '--uninspiring' => true,
         ], $this->getOutput());
 
-        $this->renderComponent(
-            $result === 0 ? Info::class : Error::class,
-            $result === 0 ? 'Theme created successfully.' : 'Unable to create theme.'
-        );
+        $result === 0
+            ? $this->renderComponent(Info::class, 'Theme created successfully.')
+            : $this->renderComponent(Error::class, 'Unable to create theme.');
 
         // Return an instance of the plugin
         return $this->get($extension);
@@ -95,6 +94,8 @@ class ThemeManager extends ExtensionManager implements ExtensionManagerInterface
         $history = Parameter::get('system::theme.history', []);
         $history[$code] = $dirName;
         Parameter::set('system::theme.history', $history);
+
+        $this->renderComponent(Info::class, 'Theme <fg=yellow>' . $code . '</> installed successfully.');
 
         return $theme;
     }
