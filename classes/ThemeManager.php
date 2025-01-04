@@ -2,18 +2,21 @@
 
 namespace Cms\Classes;
 
+use FilesystemIterator;
 use Illuminate\Console\View\Components\Error;
 use Illuminate\Console\View\Components\Info;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use System\Classes\Extensions\ExtensionManager;
 use System\Classes\Extensions\ExtensionManagerInterface;
 use System\Classes\Extensions\Source\ExtensionSource;
-use Winter\Storm\Foundation\Extension\WinterExtension;
 use System\Models\Parameter;
 use Winter\Storm\Exception\ApplicationException;
+use Winter\Storm\Foundation\Extension\WinterExtension;
 use Winter\Storm\Packager\Composer;
 use Winter\Storm\Support\Facades\File;
+use Winter\Storm\Support\Facades\Yaml;
 
 /**
  * Theme manager
@@ -221,6 +224,27 @@ class ThemeManager extends ExtensionManager implements ExtensionManagerInterface
         }
 
         return $updates;
+    }
+
+    public function findThemesInPath(string $path): array
+    {
+        $themeFiles = [];
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $file) {
+            if ($file->isFile() && $file->getFilename() === 'theme.yaml') {
+                $config = Yaml::parseFile($file->getRealPath());
+                if (isset($config['name'])) {
+                    $themeFiles[$config['name']] = $file->getPathname();
+                }
+            }
+        }
+
+        return $themeFiles;
     }
 
     /**
