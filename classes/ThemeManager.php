@@ -127,9 +127,10 @@ class ThemeManager extends ExtensionManager implements ExtensionManagerInterface
         // TODO: Implement disable() method.
     }
 
-    public function update(WinterExtension|string|null $extension = null, bool $migrationsOnly = false): Theme
+    public function update(WinterExtension|string|null $extension = null, bool $migrationsOnly = false): ?bool
     {
-        // TODO: Implement update() method.
+        // @TODO: implement
+        return true;
     }
 
     public function refresh(WinterExtension|string|null $extension = null): Theme
