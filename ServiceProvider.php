@@ -491,14 +491,4 @@ class ServiceProvider extends ModuleServiceProvider implements WinterExtension
             ];
         });
     }
-
-    public function getPath(): string
-    {
-        return __DIR__;
-    }
-
-    public function getIdentifier(): string
-    {
-        return 'Cms';
-    }
 }
