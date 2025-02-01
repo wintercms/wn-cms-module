@@ -5,5 +5,5 @@ This theme uses [Vite](https://wintercms.com/docs/develop/docs/console/asset-com
 ## Getting Started
 
 1. Run [`artisan vite:install`](https://wintercms.com/docs/console/asset-compilation#mix-install) and agree when asked to modify the `package.json` file for your project in order to register & install this theme's dependencies.
-2. Run [`artisan vite:compile -p theme-shoplocal --production`](https://wintercms.com/docs/develop/docs/console/asset-compilation-vite#compile-a-vite-packages) to compile the asset files for this theme.
-3. Optionally, run [`artisan vite:watch theme-shoplocal`](https://wintercms.com/docs/develop/docs/console/asset-compilation-vite#watch-a-vite-package) while actively working on the theme to have the assets automatically recompiled in the background for you every time you make a change.
+2. Run [`artisan vite:compile -p theme-{{code}} --production`](https://wintercms.com/docs/develop/docs/console/asset-compilation-vite#compile-a-vite-packages) to compile the asset files for this theme.
+3. Optionally, run [`artisan vite:watch theme-{{code}}`](https://wintercms.com/docs/develop/docs/console/asset-compilation-vite#watch-a-vite-package) while actively working on the theme to have the assets automatically recompiled in the background for you every time you make a change.
