@@ -171,9 +171,9 @@ class Extension extends TwigExtension
     /**
      * Generates Vite tags via Laravel's Vite Object.
      */
-    public function viteFunction(array $entrypoints, string $package): \Illuminate\Support\HtmlString
+    public function viteFunction(array $entrypoints, string $package, ?string $buildDirectory = null): \Illuminate\Support\HtmlString
     {
-        return Vite::tags($entrypoints, $package);
+        return Vite::tags($entrypoints, $package, $buildDirectory);
     }
 
     /**
