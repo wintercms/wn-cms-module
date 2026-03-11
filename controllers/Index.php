@@ -687,7 +687,7 @@ class Index extends Controller
         $codeField = ($template instanceof Asset) ? 'content' : 'markup';
 
         $lang = match ($ext) {
-            'htm' => 'twig',
+            '', 'htm' => 'twig',
             'html' => 'html',
             'css' => 'css',
             'js', 'json' => 'javascript',
