@@ -171,7 +171,7 @@ return [
         'not_found' => "AJAX handler ':name' was not found.",
     ],
     'cms' => [
-        'menu_label' => 'CMS',
+        'menu_label' => 'Theme Editor',
     ],
     'sidebar' => [
         'add' => 'Add',
@@ -271,6 +271,7 @@ return [
         'no_list_records' => 'No records found',
         'delete_confirm' => 'Delete selected templates?',
         'order_by' => 'Order by',
+        'type_not_permitted' => 'You require the ":permission" permission to manage :type',
     ],
     'permissions' => [
         'name' => 'CMS',
