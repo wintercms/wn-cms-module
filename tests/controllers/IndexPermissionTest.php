@@ -201,4 +201,53 @@ class IndexPermissionTest extends PluginTestCase
         $this->assertNotNull($controller->widget->contentList ?? null, 'contentList should be registered');
         $this->assertNull($controller->widget->componentList ?? null, 'componentList should not be registered for content-only user');
     }
+
+    //
+    // makeTemplateFormWidget — permission checks
+    //
+
+    /**
+     * @dataProvider deniedAccessProvider
+     */
+    public function testMakeTemplateFormWidgetDenied(string $grantedPermission, string $deniedType): void
+    {
+        $user = (new UserFixture)->withPermission($grantedPermission, true);
+        $this->actingAs($user);
+        $controller = new Index;
+
+        $template = self::callProtectedMethod($controller, 'createTemplate', [$deniedType]);
+
+        $this->expectException(AuthorizationException::class);
+        self::callProtectedMethod($controller, 'makeTemplateFormWidget', [$deniedType, $template]);
+    }
+
+    /**
+     * @dataProvider allowedAccessProvider
+     */
+    public function testMakeTemplateFormWidgetAllowed(string $type, array $permissions): void
+    {
+        $user = new UserFixture;
+        foreach ($permissions as $permission) {
+            $user->withPermission($permission, true);
+        }
+        $this->actingAs($user);
+        $controller = new Index;
+
+        $template = self::callProtectedMethod($controller, 'createTemplate', [$type]);
+        $widget = self::callProtectedMethod($controller, 'makeTemplateFormWidget', [$type, $template]);
+
+        $this->assertInstanceOf(\Backend\Widgets\Form::class, $widget);
+    }
+
+    public function testMakeTemplateFormWidgetSuperuserAllTypes(): void
+    {
+        $this->actingAs((new UserFixture)->asSuperUser());
+        $controller = new Index;
+
+        foreach (self::$allTypes as $type) {
+            $template = self::callProtectedMethod($controller, 'createTemplate', [$type]);
+            $widget = self::callProtectedMethod($controller, 'makeTemplateFormWidget', [$type, $template]);
+            $this->assertInstanceOf(\Backend\Widgets\Form::class, $widget, "Superuser should be able to create form widget for $type");
+        }
+    }
 }

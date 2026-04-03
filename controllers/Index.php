@@ -721,6 +721,8 @@ class Index extends Controller
      */
     protected function makeTemplateFormWidget(string $type, CmsObject|Asset $template, ?string $alias = null): Form
     {
+        $this->validateRequestType($type);
+
         $formConfigs = [
             'page'    => '~/modules/cms/classes/page/fields.yaml',
             'partial' => '~/modules/cms/classes/partial/fields.yaml',
